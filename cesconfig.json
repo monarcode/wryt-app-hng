@@ -23,8 +23,8 @@
     "eas": false
   },
   "packageManager": {
-    "type": "yarn",
-    "version": "1.22.22"
+    "type": "npm",
+    "version": "10.2.3"
   },
   "os": {
     "type": "Darwin",
