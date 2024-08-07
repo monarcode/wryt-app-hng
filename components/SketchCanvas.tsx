@@ -1,4 +1,12 @@
-import { Canvas, Path, Skia, SkPath, TouchInfo, useTouchHandler } from '@shopify/react-native-skia';
+import {
+  Canvas,
+  Path,
+  Skia,
+  SkPath,
+  TouchInfo,
+  useTouchHandler,
+  useCanvasRef,
+} from '@shopify/react-native-skia';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 interface Point {
@@ -10,16 +18,19 @@ interface SketchCanvasProps {
   containerStyle: any;
   color?: string;
   strokeWidth?: number;
+  onSaveSnapshot: (uri: string) => void;
 }
 
 export const SketchCanvas: React.FC<SketchCanvasProps> = ({
   containerStyle,
   color = 'black',
   strokeWidth = 4,
+  onSaveSnapshot,
 }) => {
   const [paths, setPaths] = useState<SkPath[]>([]);
   const currentPath = useRef<SkPath | null>(null);
   const pointsRef = useRef<Point[]>([]);
+  const canvasRef = useCanvasRef(); // Add a ref for the canvas
 
   const midPointBtw = useCallback((p1: Point, p2: Point) => {
     return {
@@ -51,6 +62,14 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
     [midPointBtw]
   );
 
+  const takeSnapshot = async () => {
+    if (canvasRef.current) {
+      const snapshot = await canvasRef.current.makeImageSnapshot();
+      const uri = snapshot.encodeToBase64(); // Get the base64-encoded URI
+      onSaveSnapshot(uri); // Pass the URI to the parent component
+    }
+  };
+
   const touchHandler = useTouchHandler({
     onStart: ({ x, y }: TouchInfo) => {
       pointsRef.current = [{ x, y }];
@@ -66,11 +85,12 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
     onEnd: () => {
       pointsRef.current = [];
       currentPath.current = null;
+      takeSnapshot(); // Take a snapshot when the path ends
     },
   });
 
   return (
-    <Canvas onTouch={touchHandler} style={containerStyle}>
+    <Canvas ref={canvasRef} onTouch={touchHandler} style={containerStyle}>
       {paths.map((path, index) => (
         <Path
           key={index}

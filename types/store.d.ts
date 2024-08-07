@@ -23,11 +23,13 @@ export type StoreType = {
   timeStamp: string;
   snapshot: null;
   refreshTrigger: number;
+  snapshotUri: string;
 
   setColor: (color: string) => void;
   setStrokeWidth: (strokeWidth: number) => void;
   setStrokeStyle: (strokeStyle: 'stroke' | 'fill') => void;
   setFileName: (fileName: string) => void;
+  setSnapshotUri: (snapshotUri: string) => void;
 
   startPath: (x: number, y: number) => void;
   addToPath: (x: number, y: number) => void;
