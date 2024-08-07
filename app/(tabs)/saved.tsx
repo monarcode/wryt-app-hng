@@ -1,16 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as PopoverPrimitive from '@rn-primitives/popover';
-import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import Entypo from '@expo/vector-icons/Entypo';
+import * as PopoverPrimitive from '@rn-primitives/popover';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Image,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
+import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SortIcon from '~/assets/icons/sort-icon.svg';
+import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 import { Text, View } from '~/components/shared';
+import EmptyState from '~/components/shared/emptyState';
 import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 import timeAgo from '~/utils/timeAgo';
-import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 
 interface Sketch {
   fileName: string;
@@ -18,8 +26,10 @@ interface Sketch {
   imageUri: string;
 }
 
+const SavedSketchesContent = [];
+
 const SavedSketches = () => {
-  const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null)
+  const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
   const [sketches, setSketches] = useState<Sketch[]>([]);
   const getAllSavedDrawings = useSketchPadStore((state) => state.getAllSavedDrawings);
   const refreshTrigger = useSketchPadStore((state) => state.refreshTrigger);
@@ -36,26 +46,22 @@ const SavedSketches = () => {
   }, [refreshTrigger]);
 
   const renderSketch = ({ item }: { item: Sketch }) => {
-
     const onDeleteSketch = async () => {
       await deleteDrawing(item.timeStamp);
       loadSavedSketches();
-      if (triggerRef.current)
-        triggerRef.current.close()
-    }
+      if (triggerRef.current) triggerRef.current.close();
+    };
 
     const handleEditSketch = () => {
-      if (triggerRef.current)
-        triggerRef.current.close()
+      if (triggerRef.current) triggerRef.current.close();
     };
 
     return (
       <>
         <ImageBackground
-          resizeMode='contain'
+          resizeMode="contain"
           source={{ uri: `data:image/png;base64,${item.imageUri}` }}
-          style={styles.sketchContainer}
-        >
+          style={styles.sketchContainer}>
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -92,7 +98,7 @@ const SavedSketches = () => {
         />
       </>
     );
-  }
+  };
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.colors.light }}>
@@ -115,21 +121,24 @@ const SavedSketches = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: theme.fontFamily.semiBold,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
-    marginTop: 20
+    marginTop: 20,
   },
   sort: {
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 50,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: theme.fontFamily.semiBold,
   },
   list: {
     padding: 16,
@@ -172,7 +181,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   popover: {
     borderRadius: 8,
