@@ -5,10 +5,14 @@ import SaveIcon from '~/assets/icons/save-icon.svg';
 import { View } from '~/components/shared';
 import { theme } from '~/theme';
 
-const SaveErase = () => {
+interface Props {
+  handleSave: (open: boolean) => void;
+}
+
+const SaveErase = ({ handleSave }: Props) => {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.action}>
+      <Pressable style={styles.action} onPress={() => handleSave(true)}>
         <SaveIcon />
       </Pressable>
       <Pressable style={styles.action}>

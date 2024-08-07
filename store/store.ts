@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Skia, SkPictureRecorder, SkPicture } from '@shopify/react-native-skia';
-import create from 'zustand';
+import { create } from 'zustand';
 
 import { StoreType, PathType, Point } from '~/types/store';
 import { createSmoothPath } from '~/utils/store.utils';
@@ -17,6 +17,8 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
   refreshTrigger: 0,
   currentPoints: [],
   snapshot: null,
+  snapshotUri: '',
+  setSnapshotUri: (uri: string) => set({ snapshotUri: uri }),
 
   setColor: (color) => set({ color }),
   setStrokeWidth: (strokeWidth) => set({ strokeWidth }),
@@ -86,7 +88,7 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
 
   saveDrawing: async () => {
     try {
-      const { paths, fileName } = get();
+      const { paths, fileName, snapshotUri } = get();
       const serializedPaths = JSON.stringify(
         paths.map((p) => ({
           path: p.path.toSVGString(),
@@ -100,7 +102,7 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
       const key = `@sketchpad_drawing_${timeStamp}`;
       await AsyncStorage.setItem(
         key,
-        JSON.stringify({ fileName, timeStamp, paths: serializedPaths })
+        JSON.stringify({ fileName, timeStamp, paths: serializedPaths, imageUri: snapshotUri })
       );
       set({ timeStamp });
       set((state) => ({ refreshTrigger: state.refreshTrigger + 1 }));
