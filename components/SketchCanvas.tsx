@@ -8,6 +8,7 @@ import {
   useCanvasRef,
 } from '@shopify/react-native-skia';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import useSketchPadStore from '~/store/store';
 
 interface Point {
   x: number;
@@ -27,7 +28,7 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
   strokeWidth = 4,
   onSaveSnapshot,
 }) => {
-  const [paths, setPaths] = useState<SkPath[]>([]);
+  // const [paths, setPaths] = useState<SkPath[]>([]);
   const currentPath = useRef<SkPath | null>(null);
   const pointsRef = useRef<Point[]>([]);
   const canvasRef = useCanvasRef(); // Add a ref for the canvas
@@ -70,21 +71,26 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
     }
   };
 
+  const { addToPath, startPath, endPath, paths } = useSketchPadStore((store) => store);
+
   const touchHandler = useTouchHandler({
     onStart: ({ x, y }: TouchInfo) => {
-      pointsRef.current = [{ x, y }];
-      currentPath.current = createSmoothPath(pointsRef.current);
-      setPaths((prev) => [...prev, currentPath.current!]);
+      startPath(x, y);
+      // pointsRef.current = [{ x, y }];
+      // currentPath.current = createSmoothPath(pointsRef.current);
+      // setPaths((prev) => [...prev, currentPath.current!]);
     },
     onActive: ({ x, y }: TouchInfo) => {
-      if (!currentPath.current) return;
-      pointsRef.current.push({ x, y });
-      currentPath.current = createSmoothPath(pointsRef.current);
-      setPaths((prev) => [...prev.slice(0, -1), currentPath.current!]);
+      addToPath(x, y);
+      // if (!currentPath.current) return;
+      // pointsRef.current.push({ x, y });
+      // currentPath.current = createSmoothPath(pointsRef.current);
+      // setPaths((prev) => [...prev.slice(0, -1), currentPath.current!]);
     },
     onEnd: () => {
-      pointsRef.current = [];
-      currentPath.current = null;
+      endPath();
+      // pointsRef.current = [];
+      // currentPath.current = null;
       takeSnapshot(); // Take a snapshot when the path ends
     },
   });
@@ -94,9 +100,9 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
       {paths.map((path, index) => (
         <Path
           key={index}
-          path={path}
-          strokeWidth={strokeWidth}
-          color={color}
+          path={path.path}
+          strokeWidth={path.strokeWidth}
+          color={path.color}
           style="stroke"
           strokeCap="round"
           strokeJoin="round"
