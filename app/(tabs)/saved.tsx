@@ -1,3 +1,5 @@
+import Entypo from '@expo/vector-icons/Entypo';
+import * as PopoverPrimitive from '@rn-primitives/popover';
 import { useEffect, useRef, useState } from 'react';
 import {
   Pressable,
@@ -7,17 +9,16 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as PopoverPrimitive from '@rn-primitives/popover';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
-import Entypo from '@expo/vector-icons/Entypo';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import SortIcon from '~/assets/icons/sort-icon.svg';
+import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 import { Text, View } from '~/components/shared';
+import EmptyState from '~/components/shared/emptyState';
 import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 import timeAgo from '~/utils/timeAgo';
-import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 
 interface Sketch {
   fileName: string;
@@ -121,6 +122,9 @@ const SavedSketches = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
