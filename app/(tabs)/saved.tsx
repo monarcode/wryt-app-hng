@@ -7,6 +7,7 @@ import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from '
 =======
 import * as PopoverPrimitive from '@rn-primitives/popover';
 import { useEffect, useRef, useState } from 'react';
+<<<<<<< HEAD
 >>>>>>> 81ebdec (empty state for saved sketch)
 import {
   Pressable,
@@ -30,6 +31,9 @@ import { Text, View } from '~/components/shared';
 import EmptyState from '~/components/shared/emptyState';
 import EmptyState from '~/components/shared/emptyState';
 =======
+=======
+import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+>>>>>>> 99534b6 (Refactor: Modified the SaveSketch card)
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -47,8 +51,6 @@ interface Sketch {
   timeStamp: string;
   imageUri: string;
 }
-
-const SavedSketchesContent = [];
 
 const SavedSketches = () => {
   const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
@@ -96,6 +98,7 @@ const SavedSketches = () => {
 
     return (
       <>
+<<<<<<< HEAD
         <ImageBackground
           resizeMode="contain"
           source={{ uri: `data:image/png;base64,${item.imageUri}` }}
@@ -104,6 +107,9 @@ const SavedSketches = () => {
         <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
 =======
 >>>>>>> 81ebdec (empty state for saved sketch)
+=======
+        <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
+>>>>>>> 99534b6 (Refactor: Modified the SaveSketch card)
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -186,6 +192,17 @@ const SavedSketches = () => {
   };
 =======
 >>>>>>> 81ebdec (empty state for saved sketch)
+
+  const sortedSketches = () => {
+    if (isSorted) {
+      return sketches.sort((a: any, b: any) => a.fileName.localeCompare(b.fileName));
+    }
+    return sketches;
+  };
+
+  const toggleSort = () => {
+    setIsSorted(!isSorted);
+  };
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.colors.light }}>
