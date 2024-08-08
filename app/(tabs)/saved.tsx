@@ -1,3 +1,5 @@
+import Entypo from '@expo/vector-icons/Entypo';
+import * as PopoverPrimitive from '@rn-primitives/popover';
 import { useEffect, useRef, useState } from 'react';
 import {
   Pressable,
@@ -7,17 +9,15 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import * as PopoverPrimitive from '@rn-primitives/popover';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
-import Entypo from '@expo/vector-icons/Entypo';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import SortIcon from '~/assets/icons/sort-icon.svg';
+import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 import { Text, View } from '~/components/shared';
+import EmptyState from '~/components/shared/emptyState';
 import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 import timeAgo from '~/utils/timeAgo';
-import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 
 interface Sketch {
   fileName: string;
@@ -32,6 +32,7 @@ const SavedSketches = () => {
   const refreshTrigger = useSketchPadStore((state) => state.refreshTrigger);
   const deleteDrawing = useSketchPadStore((state) => state.deleteDrawing);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSorted, setIsSorted] = useState(false);
 
   const loadSavedSketches = async () => {
     const drawings = await getAllSavedDrawings();
@@ -40,18 +41,18 @@ const SavedSketches = () => {
 
   useEffect(() => {
     loadSavedSketches();
-  }, [refreshTrigger]);
+  }, [refreshTrigger, isSorted]);
 
-  const renderSketch = ({ item }: { item: Sketch }) => {
+ const renderSketch = ({ item }: { item: Sketch }) => {
     const onDeleteSketch = async () => {
       await deleteDrawing(item.timeStamp);
       loadSavedSketches();
+      if (triggerRef.current) triggerRef.current.close();
+    };
+
       if (triggerRef.current) {
         triggerRef.current.close();
       }
-    };
-
-    const handleEditSketch = () => {
       if (triggerRef.current) triggerRef.current.close();
     };
 
@@ -61,11 +62,15 @@ const SavedSketches = () => {
           resizeMode="contain"
           source={{ uri: `data:image/png;base64,${item.imageUri}` }}
           style={styles.sketchContainer}>
+
+        <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
               <PopoverPrimitive.Trigger ref={triggerRef}>
-                <Entypo name="dots-three-vertical" size={15} color="#47474F" />
+                <View style={{ paddingTop: 10, paddingRight: 10 }}>
+                  <Entypo name="dots-three-vertical" size={15} color="#47474F" />
+                </View>
               </PopoverPrimitive.Trigger>
               <PopoverPrimitive.Portal>
                 <PopoverPrimitive.Content side="bottom" sideOffset={5}>
@@ -85,11 +90,38 @@ const SavedSketches = () => {
             </PopoverPrimitive.Root>
           </View>
 
-          <View>
+          <View
+            style={{
+              flex: 1,
+              overflow: 'hidden',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              resizeMode="contain"
+              source={{ uri: `data:image/png;base64,${item.imageUri}` }}
+              style={styles.sketchImage}
+            />
+          </View>
+
+          <View
+            style={{
+              width: '100%',
+              position: 'absolute',
+              paddingBottom: 16,
+              paddingLeft: 8,
+              paddingTop: 8,
+              opacity: 0.9,
+              bottom: 0,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              backgroundColor: theme.colors.light,
+            }}>
             <Text style={styles.sketchTitle}>{item.fileName}</Text>
             <Text style={styles.sketchTimestamp}>{timeAgo(item.timeStamp)}</Text>
           </View>
-        </ImageBackground>
+        </TouchableOpacity>
+
         <DeleteSketchModal
           onDeleteSketch={onDeleteSketch}
           isOpen={isModalOpen}
@@ -100,27 +132,52 @@ const SavedSketches = () => {
     );
   };
 
+  const sortedSketches = () => {
+    if (isSorted) {
+      return sketches.sort((a: any, b: any) => a.fileName.localeCompare(b.fileName));
+    }
+    return sketches;
+  };
+
+  const toggleSort = () => {
+    setIsSorted(!isSorted);
+  };
+
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.colors.light }}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Saved Sketches</Text>
+      {sketches.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <View style={styles.header}>
+            <Text style={styles.title}>Saved Sketches</Text>
 
-        <Pressable style={styles.sort}>
-          <SortIcon width={24} height={24} />
-        </Pressable>
-      </View>
-      <FlatList
-        data={sketches}
-        numColumns={2}
-        renderItem={renderSketch}
-        keyExtractor={(item, index) => `${item.timeStamp}_${index}`}
-        contentContainerStyle={styles.list}
-      />
+            <TouchableOpacity activeOpacity={0.6} style={styles.sort} onPress={toggleSort}>
+              <SortIcon width={24} height={24} />
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            data={sortedSketches()}
+            numColumns={2}
+            renderItem={renderSketch}
+            keyExtractor={(item, index) => `${item.timeStamp}_${index}`}
+            contentContainerStyle={styles.list}
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: theme.fontFamily.semiBold,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -133,10 +190,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 50,
   },
-  title: {
-    fontSize: 24,
-    fontFamily: theme.fontFamily.semiBold,
-  },
   list: {
     padding: 16,
     width: '100%',
@@ -145,7 +198,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: '#fff',
     borderRadius: 8,
-    padding: 16,
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowOffset: { width: 0, height: 2 },
@@ -164,14 +216,21 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 8,
   },
+  sketchImage: {
+    width: '100%',
+    height: '100%',
+    position: 'relative',
+  },
   sketchTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: theme.fontFamily.semiBold,
+    color: theme.colors.dark,
+    textTransform: 'capitalize',
   },
   sketchTimestamp: {
-    fontSize: 14,
-    fontWeight: 400,
-    color: theme.colors.gray,
+    fontSize: theme.fontSizes.md,
+    fontFamily: theme.fontFamily.medium,
+    color: theme.colors.neutral[300],
   },
   cardHead: {
     marginTop: 10,
