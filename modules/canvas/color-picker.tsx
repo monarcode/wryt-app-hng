@@ -1,45 +1,24 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import React, { useState } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import ColorPickerIcon from '~/assets/icons/color-picker.svg';
-import BottomSheet from '~/components/BottomSheet';
 import { View } from '~/components/shared';
 import { theme } from '~/theme';
 
-const ColorPicker: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [recentlyUsedColors, setRecentlyUsedColors] = useState<string[]>([]);
-  const [currentColor, setCurrentColor] = useState<string>('#000');
+interface ColorPickerProps {
+  onPress: () => void;
+}
 
-  const handleColorSelect = (color: string) => {
-    setCurrentColor(color);
-    setRecentlyUsedColors((prevColors) => {
-      const newColors = [color, ...prevColors.filter((c) => c !== color)].slice(0, 3);
-      return newColors;
-    });
-    setModalVisible(false);
-  };
-
+const ColorPicker = ({ onPress }: ColorPickerProps) => {
   return (
-    <BottomSheetModalProvider>
-      <View style={styles.container}>
-        <View style={styles.colorWrapper}>
-          <View style={[styles.activeColor, { backgroundColor: currentColor }]} />
-        </View>
-
-        <Pressable onPress={() => setModalVisible(true)} style={styles.action}>
-          <ColorPickerIcon />
-        </Pressable>
-
-        <BottomSheet
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          recentlyUsedColors={recentlyUsedColors}
-          onColorSelect={handleColorSelect}
-        />
+    <View style={styles.container}>
+      <View style={styles.colorWrapper}>
+        <View style={[styles.activeColor]} />
       </View>
-    </BottomSheetModalProvider>
+
+      <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={styles.action}>
+        <ColorPickerIcon />
+      </TouchableOpacity>
+    </View>
   );
 };
 
