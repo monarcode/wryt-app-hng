@@ -7,10 +7,11 @@ import { createSmoothPath } from '~/utils/store.utils';
 
 const useSketchPadStore = create<StoreType>((set, get) => ({
   recentColors: ['#00BCD4', '#9C27B0', '#FF5722'],
+
   paths: [],
   redoStack: [],
   color: '#FF5733',
-  strokeWidth: 4,
+  strokeWidth: 2,
   strokeStyle: 'stroke',
   currentPath: null,
   fileName: '',
@@ -25,10 +26,10 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
 
   setColor: (color) => {
     const { recentColors, setRecentColors } = get();
-    const updatedRecentColors = [color, ...recentColors.filter(c => c !== color)].slice(0, 3);
+    const updatedRecentColors = [color, ...recentColors.filter((c) => c !== color)].slice(0, 3);
     set({ color, recentColors: updatedRecentColors });
   },
-  
+
   setRecentColors: (colors) => set({ recentColors: colors }),
   setStrokeWidth: (strokeWidth) => set({ strokeWidth }),
   setStrokeStyle: (strokeStyle) => set({ strokeStyle }),

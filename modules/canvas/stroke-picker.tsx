@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
   },
   stroke: {
     transform: [{ scale: 0.8 }],
-    padding:10,
-    borderRadius:100
+    padding: 10,
+    borderRadius: 100,
   },
 });
 
