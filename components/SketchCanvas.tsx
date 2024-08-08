@@ -7,7 +7,7 @@ import {
   useTouchHandler,
   useCanvasRef,
 } from '@shopify/react-native-skia';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import useSketchPadStore from '~/store/store';
 
 interface Point {
@@ -28,14 +28,24 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
   strokeWidth = 4,
   onSaveSnapshot,
 }) => {
-  const canvasRef = useCanvasRef(); // Add a ref for the canvas
+  const [paths, setPaths] = useState<SkPath[]>([]);
+  const currentPath = useRef<SkPath | null>(null);
+  const pointsRef = useRef<Point[]>([]);
+  const canvasRef = useCanvasRef();
+
+  const { paths: storePaths, addPath } = useSketchPadStore();
+
+  // Sync local paths with store paths
+  useEffect(() => {
+    setPaths(storePaths.map((p) => p.path));
+  }, [storePaths]);
 
 
   const takeSnapshot = async () => {
     if (canvasRef.current) {
       const snapshot = await canvasRef.current.makeImageSnapshot();
-      const uri = snapshot.encodeToBase64(); // Get the base64-encoded URI
-      onSaveSnapshot(uri); // Pass the URI to the parent component
+      const uri = snapshot.encodeToBase64();
+      onSaveSnapshot(uri);
     }
   };
 
@@ -49,8 +59,12 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
       addToPath(x, y);
     },
     onEnd: () => {
-      endPath();
-      takeSnapshot(); // Take a snapshot when the path ends
+      if (currentPath.current) {
+        addPath({ path: currentPath.current, color, strokeWidth, strokeStyle: 'stroke' });
+      }
+      pointsRef.current = [];
+      currentPath.current = null;
+      takeSnapshot();
     },
   });
 

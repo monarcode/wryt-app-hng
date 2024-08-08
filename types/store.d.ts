@@ -24,6 +24,7 @@ export type StoreType = {
   snapshot: null;
   refreshTrigger: number;
   snapshotUri: string;
+  currentKey: string;
 
   setColor: (color: string) => void;
   setStrokeWidth: (strokeWidth: number) => void;
@@ -34,11 +35,13 @@ export type StoreType = {
   startPath: (x: number, y: number) => void;
   addToPath: (x: number, y: number) => void;
   endPath: () => void;
+  addPath: (x: PathType) => void;
 
   undo: () => void;
   redo: () => void;
   clear: () => void;
 
   saveDrawing: () => Promise<void>;
+  deleteDrawing: (timeStamp: string) => Promise<void>;
   loadDrawing: () => Promise<void>;
 };
