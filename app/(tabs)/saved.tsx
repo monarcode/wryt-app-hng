@@ -62,7 +62,8 @@ const SavedSketches = () => {
         resizeMode="contain"
         source={{ uri: `data:image/png;base64,${item.imageUri}` }}
         style={styles.sketchContainer}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
+
+        <TouchableOpacity activeOpacity={0.8} style={{ flex: 1 }}>
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -92,6 +93,7 @@ const SavedSketches = () => {
           <View
             style={{
               flex: 1,
+              width: '100%',
               overflow: 'hidden',
               alignItems: 'center',
               justifyContent: 'center',
