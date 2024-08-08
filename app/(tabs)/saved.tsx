@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import SortIcon from '~/assets/icons/sort-icon.svg';
 import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 import { Text, View } from '~/components/shared';
@@ -43,27 +44,25 @@ const SavedSketches = () => {
     loadSavedSketches();
   }, [refreshTrigger, isSorted]);
 
- const renderSketch = ({ item }: { item: Sketch }) => {
+  const renderSketch = ({ item }: { item: Sketch }) => {
     const onDeleteSketch = async () => {
       await deleteDrawing(item.timeStamp);
       loadSavedSketches();
       if (triggerRef.current) triggerRef.current.close();
     };
 
+    const handleEditSketch = () => {
       if (triggerRef.current) {
         triggerRef.current.close();
       }
-      if (triggerRef.current) triggerRef.current.close();
     };
 
     return (
-      <>
-        <ImageBackground
-          resizeMode="contain"
-          source={{ uri: `data:image/png;base64,${item.imageUri}` }}
-          style={styles.sketchContainer}>
-
-        <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
+      <ImageBackground
+        resizeMode="contain"
+        source={{ uri: `data:image/png;base64,${item.imageUri}` }}
+        style={styles.sketchContainer}>
+        <TouchableOpacity activeOpacity={0.8} style={{ flex: 1 }}>
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -93,6 +92,7 @@ const SavedSketches = () => {
           <View
             style={{
               flex: 1,
+              width: '100%',
               overflow: 'hidden',
               alignItems: 'center',
               justifyContent: 'center',
@@ -128,13 +128,13 @@ const SavedSketches = () => {
           onClose={() => setIsModalOpen(false)}
           currentKey={item.timeStamp}
         />
-      </>
+      </ImageBackground>
     );
   };
 
   const sortedSketches = () => {
     if (isSorted) {
-      return sketches.sort((a: any, b: any) => a.fileName.localeCompare(b.fileName));
+      return sketches.sort((a: Sketch, b: Sketch) => a.fileName.localeCompare(b.fileName));
     }
     return sketches;
   };
