@@ -60,28 +60,36 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
     }
   },
 
-  undo: () => {
-    const { paths, redoStack } = get();
-    if (paths.length > 0) {
-      const lastPath = paths.pop();
-      set({
-        paths: [...paths],
-        redoStack: [...redoStack, lastPath as PathType],
-      });
-    }
-  },
+  addPath: (newPath: PathType) =>
+    set((state) => ({
+      paths: [...state.paths, newPath],
+    })),
 
-  redo: () => {
-    const { paths, redoStack } = get();
-    if (redoStack.length > 0) {
-      const lastRedoPath = redoStack.pop();
-      set({
-        paths: [...paths, lastRedoPath as PathType],
-        redoStack: [...redoStack],
-      });
-    }
-  },
+  undo: () =>
+    set((state) => {
+      if (state.paths.length > 0) {
+        const newPaths = [...state.paths];
+        const lastPath = newPaths.pop()!;
+        return {
+          paths: newPaths,
+          redoStack: [...state.redoStack, lastPath],
+        };
+      }
+      return state;
+    }),
 
+  redo: () =>
+    set((state) => {
+      if (state.redoStack.length > 0) {
+        const newRedoStack = [...state.redoStack];
+        const lastRedoPath = newRedoStack.pop()!;
+        return {
+          paths: [...state.paths, lastRedoPath],
+          redoStack: newRedoStack,
+        };
+      }
+      return state;
+    }),
   clear: () => {
     set({ paths: [], redoStack: [], currentPath: null, currentPoints: [], snapshot: null });
   },
