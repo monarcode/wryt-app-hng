@@ -1,6 +1,7 @@
-import { Text, TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
-import React from 'react';
 import * as Dialog from '@rn-primitives/dialog';
+import React from 'react';
+import { Text, TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
+
 import { theme } from '~/theme';
 import useSketchPadStore from '~/store/store';
 
