@@ -40,5 +40,6 @@ export type StoreType = {
   clear: () => void;
 
   saveDrawing: () => Promise<void>;
+  deleteDrawing: (timeStamp: string) => Promise<void>;
   loadDrawing: () => Promise<void>;
 };

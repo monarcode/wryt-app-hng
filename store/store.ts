@@ -111,6 +111,15 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
     }
   },
 
+  deleteDrawing: async (timeStamp: string) => {
+    try {
+      const key = `@sketchpad_drawing_${timeStamp}`;
+      await AsyncStorage.removeItem(key);
+    } catch (e) {
+      console.error('Failed to save drawing.', e);
+    }
+  },
+
   loadDrawing: async () => {
     try {
       const serializedData = await AsyncStorage.getItem('@sketchpad_drawing');
