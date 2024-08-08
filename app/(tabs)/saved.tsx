@@ -2,6 +2,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as PopoverPrimitive from '@rn-primitives/popover';
 import { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
 import {
   Pressable,
   StyleSheet,
@@ -31,8 +32,6 @@ interface Sketch {
   timeStamp: string;
   imageUri: string;
 }
-
-const SavedSketchesContent = [];
 
 const SavedSketches = () => {
   const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
