@@ -10,6 +10,7 @@ import { Text, View } from '~/components/shared';
 import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 import timeAgo from '~/utils/timeAgo';
+import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 
 interface Sketch {
   fileName: string;
@@ -23,6 +24,7 @@ const SavedSketches = () => {
   const getAllSavedDrawings = useSketchPadStore((state) => state.getAllSavedDrawings);
   const refreshTrigger = useSketchPadStore((state) => state.refreshTrigger);
   const deleteDrawing = useSketchPadStore((state) => state.deleteDrawing);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const loadSavedSketches = async () => {
     const drawings = await getAllSavedDrawings();
@@ -33,54 +35,64 @@ const SavedSketches = () => {
     loadSavedSketches();
   }, [refreshTrigger]);
 
-  const handleDeleteSketch = async (timeStamp: string) => {
-    await deleteDrawing(timeStamp);
-    loadSavedSketches();
-    if (triggerRef.current)
-      triggerRef.current.close()
-  };
+  const renderSketch = ({ item }: { item: Sketch }) => {
 
-  const handleEditSketch = () => {
-    if (triggerRef.current)
-      triggerRef.current.close()
-  };
+    const onDeleteSketch = async () => {
+      await deleteDrawing(item.timeStamp);
+      loadSavedSketches();
+      if (triggerRef.current)
+        triggerRef.current.close()
+    }
 
-  const renderSketch = ({ item }: { item: Sketch }) => (
-    <ImageBackground
-      resizeMode='contain'
-      source={{ uri: `data:image/png;base64,${item.imageUri}` }}
-      style={styles.sketchContainer}
-    >
-      <View style={styles.cardHead}>
-        <View />
-        <PopoverPrimitive.Root>
-          <PopoverPrimitive.Trigger ref={triggerRef}>
-            <Entypo name="dots-three-vertical" size={15} color="#47474F" />
-          </PopoverPrimitive.Trigger>
-          <PopoverPrimitive.Portal>
-            <PopoverPrimitive.Content side="bottom" sideOffset={5}>
-              <Animated.View
-                entering={FadeInDown.duration(200)}
-                exiting={FadeOutDown.duration(200)}
-                style={styles.popover}>
-                <TouchableOpacity onPress={handleEditSketch}>
-                  <Text style={styles.selectText}>Edit Sketch</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteSketch(item.timeStamp)}>
-                  <Text style={styles.selectText}>Delete Sketch</Text>
-                </TouchableOpacity>
-              </Animated.View>
-            </PopoverPrimitive.Content>
-          </PopoverPrimitive.Portal>
-        </PopoverPrimitive.Root>
-      </View>
+    const handleEditSketch = () => {
+      if (triggerRef.current)
+        triggerRef.current.close()
+    };
 
-      <View>
-        <Text style={styles.sketchTitle}>{item.fileName}</Text>
-        <Text style={styles.sketchTimestamp}>{timeAgo(item.timeStamp)}</Text>
-      </View>
-    </ImageBackground>
-  );
+    return (
+      <>
+        <ImageBackground
+          resizeMode='contain'
+          source={{ uri: `data:image/png;base64,${item.imageUri}` }}
+          style={styles.sketchContainer}
+        >
+          <View style={styles.cardHead}>
+            <View />
+            <PopoverPrimitive.Root>
+              <PopoverPrimitive.Trigger ref={triggerRef}>
+                <Entypo name="dots-three-vertical" size={15} color="#47474F" />
+              </PopoverPrimitive.Trigger>
+              <PopoverPrimitive.Portal>
+                <PopoverPrimitive.Content side="bottom" sideOffset={5}>
+                  <Animated.View
+                    entering={FadeInDown.duration(200)}
+                    exiting={FadeOutDown.duration(200)}
+                    style={styles.popover}>
+                    <TouchableOpacity onPress={handleEditSketch}>
+                      <Text style={styles.selectText}>Edit Sketch</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setIsModalOpen(true)}>
+                      <Text style={styles.selectText}>Delete Sketch</Text>
+                    </TouchableOpacity>
+                  </Animated.View>
+                </PopoverPrimitive.Content>
+              </PopoverPrimitive.Portal>
+            </PopoverPrimitive.Root>
+          </View>
+
+          <View>
+            <Text style={styles.sketchTitle}>{item.fileName}</Text>
+            <Text style={styles.sketchTimestamp}>{timeAgo(item.timeStamp)}</Text>
+          </View>
+        </ImageBackground>
+        <DeleteSketchModal
+          onDeleteSketch={onDeleteSketch}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </>
+    );
+  }
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.colors.light }}>
