@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SketchCanvas } from '~/components/SketchCanvas';
+import ClearSketchModal from '~/components/modals/ClearSketchModal';
 import SaveSketchModal from '~/components/modals/SaveSketchModal';
 import ColorPicker from '~/modules/canvas/color-picker';
 import SaveErase from '~/modules/canvas/save-erase';
@@ -13,7 +14,12 @@ import { theme } from '~/theme';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEraseModalOpen, setIsEraseModalOpen] = useState(false);
   const setSnapshotUri = useSketchPadStore((state) => state.setSnapshotUri);
+
+  const handleEraseModalOpenChange = (open: boolean) => {
+    setIsEraseModalOpen(open);
+  };
 
   const handleModalOpenChange = (open: boolean) => {
     setIsModalOpen(open);
@@ -29,12 +35,13 @@ export default function Home() {
         style={{ flex: 1, paddingHorizontal: 18, backgroundColor: theme.colors.light }}>
         <View style={styles.container}>
           <SketchCanvas containerStyle={{ flex: 1 }} onSaveSnapshot={handleSaveSnapshot} />
-          <SaveErase handleSave={handleModalOpenChange} />
+          <SaveErase handleErase={handleEraseModalOpenChange} handleSave={handleModalOpenChange} />
           <UndoRedo />
           <ColorPicker />
           <StrokePicker />
         </View>
         <SaveSketchModal isOpen={isModalOpen} onOpenChange={handleModalOpenChange} />
+        <ClearSketchModal isOpen={isEraseModalOpen} onOpenChange={handleEraseModalOpenChange} />
       </SafeAreaView>
     </>
   );
