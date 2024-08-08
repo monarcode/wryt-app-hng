@@ -2,15 +2,20 @@ import { Text, TouchableOpacity, StyleSheet, Dimensions, View } from 'react-nati
 import React from 'react';
 import * as Dialog from '@rn-primitives/dialog';
 import { theme } from '~/theme';
+import useSketchPadStore from '~/store/store';
 
 interface Props {
+  onDeleteSketch: () => void;
   isOpen: boolean;
   onClose: () => void;
-  onDeleteSketch: () => void;
+  currentKey: string;
 }
 
-const DeleteSketchModal = ({ isOpen, onClose, onDeleteSketch }: Props) => {
+const DeleteSketchModal = ({ isOpen, onClose, onDeleteSketch, currentKey }: Props) => {
+  const deleteDrawing = useSketchPadStore((state) => state.deleteDrawing);
+
   const handleDelete = async () => {
+    await deleteDrawing(currentKey);
     onDeleteSketch();
     onClose();
   };
@@ -23,19 +28,15 @@ const DeleteSketchModal = ({ isOpen, onClose, onDeleteSketch }: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay style={styles.overlay} />
         <Dialog.Content style={styles.modalContainer}>
-          <Dialog.Title style={styles.title}>Are You Sure You Want to delete this Canvas?</Dialog.Title>
+          <Dialog.Title style={styles.title}>
+            Are You Sure You Want to delete this Canvas?
+          </Dialog.Title>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.buttonCancel}
-              onPress={handleCancel}
-            >
+            <TouchableOpacity style={styles.buttonCancel} onPress={handleCancel}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={handleDelete}
-            >
+            <TouchableOpacity style={styles.button} onPress={handleDelete}>
               <Text style={styles.buttonText}>Delete</Text>
             </TouchableOpacity>
           </View>
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 30
+    marginTop: 30,
   },
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',

@@ -24,6 +24,7 @@ export type StoreType = {
   snapshot: null;
   refreshTrigger: number;
   snapshotUri: string;
+  currentKey: string;
 
   setColor: (color: string) => void;
   setStrokeWidth: (strokeWidth: number) => void;

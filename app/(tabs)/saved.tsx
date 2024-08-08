@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Image,
+  FlatList,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as PopoverPrimitive from '@rn-primitives/popover';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
@@ -19,7 +26,7 @@ interface Sketch {
 }
 
 const SavedSketches = () => {
-  const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null)
+  const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
   const [sketches, setSketches] = useState<Sketch[]>([]);
   const getAllSavedDrawings = useSketchPadStore((state) => state.getAllSavedDrawings);
   const refreshTrigger = useSketchPadStore((state) => state.refreshTrigger);
@@ -36,26 +43,24 @@ const SavedSketches = () => {
   }, [refreshTrigger]);
 
   const renderSketch = ({ item }: { item: Sketch }) => {
-
     const onDeleteSketch = async () => {
       await deleteDrawing(item.timeStamp);
       loadSavedSketches();
-      if (triggerRef.current)
-        triggerRef.current.close()
-    }
+      if (triggerRef.current) {
+        triggerRef.current.close();
+      }
+    };
 
     const handleEditSketch = () => {
-      if (triggerRef.current)
-        triggerRef.current.close()
+      if (triggerRef.current) triggerRef.current.close();
     };
 
     return (
       <>
         <ImageBackground
-          resizeMode='contain'
+          resizeMode="contain"
           source={{ uri: `data:image/png;base64,${item.imageUri}` }}
-          style={styles.sketchContainer}
-        >
+          style={styles.sketchContainer}>
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -89,10 +94,11 @@ const SavedSketches = () => {
           onDeleteSketch={onDeleteSketch}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+          currentKey={item.timeStamp}
         />
       </>
     );
-  }
+  };
 
   return (
     <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: theme.colors.light }}>
@@ -120,7 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
-    marginTop: 20
+    marginTop: 20,
   },
   sort: {
     backgroundColor: '#fff',
@@ -172,7 +178,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   popover: {
     borderRadius: 8,

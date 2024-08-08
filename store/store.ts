@@ -18,6 +18,8 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
   currentPoints: [],
   snapshot: null,
   snapshotUri: '',
+  currentKey: '',
+
   setSnapshotUri: (uri: string) => set({ snapshotUri: uri }),
 
   setColor: (color) => set({ color }),
@@ -96,7 +98,7 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
 
   saveDrawing: async () => {
     try {
-      const { paths, fileName, snapshotUri } = get();
+      const { paths, fileName, snapshotUri, clear } = get();
       const serializedPaths = JSON.stringify(
         paths.map((p) => ({
           path: p.path.toSVGString(),
@@ -112,8 +114,9 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
         key,
         JSON.stringify({ fileName, timeStamp, paths: serializedPaths, imageUri: snapshotUri })
       );
-      set({ timeStamp });
+      set({ timeStamp, currentKey: key });
       set((state) => ({ refreshTrigger: state.refreshTrigger + 1 }));
+      clear();
     } catch (e) {
       console.error('Failed to save drawing.', e);
     }
@@ -121,8 +124,9 @@ const useSketchPadStore = create<StoreType>((set, get) => ({
 
   deleteDrawing: async (timeStamp: string) => {
     try {
-      const key = `@sketchpad_drawing_${timeStamp}`;
-      await AsyncStorage.removeItem(key);
+      const { currentKey } = get();
+      await AsyncStorage.removeItem(currentKey);
+      set((state) => ({ refreshTrigger: state.refreshTrigger + 1 }));
     } catch (e) {
       console.error('Failed to save drawing.', e);
     }
