@@ -84,6 +84,9 @@ const SavedSketches = () => {
       if (triggerRef.current) {
         triggerRef.current.close();
       }
+=======
+      if (triggerRef.current) triggerRef.current.close();
+>>>>>>> 99534b61b35e7d126f5e893e680cda9a6a6fc298
     };
 
     const handleEditSketch = () => {
@@ -243,8 +246,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  title: {
+    fontSize: 24,
+    fontFamily: theme.fontFamily.semiBold,
+  },
+  container: {
+    flex: 1,
+  },
+<<<<<<< HEAD
 =======
->>>>>>> 81ebdec (empty state for saved sketch)
+  title: {
+    fontSize: 24,
+    fontFamily: theme.fontFamily.semiBold,
+  },
+>>>>>>> 99534b61b35e7d126f5e893e680cda9a6a6fc298
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
