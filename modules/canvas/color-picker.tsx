@@ -1,19 +1,23 @@
-import { Pressable, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import ColorPickerIcon from '~/assets/icons/color-picker.svg';
 import { View } from '~/components/shared';
 import { theme } from '~/theme';
 
-const ColorPicker = () => {
+interface ColorPickerProps {
+  onPress: () => void;
+}
+
+const ColorPicker = ({ onPress }: ColorPickerProps) => {
   return (
     <View style={styles.container}>
       <View style={styles.colorWrapper}>
         <View style={[styles.activeColor]} />
       </View>
 
-      <Pressable style={styles.action}>
+      <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={styles.action}>
         <ColorPickerIcon />
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 };

@@ -11,6 +11,7 @@ export type PathType = {
 };
 
 export type StoreType = {
+  recentColors: string[];
   getAllSavedDrawings: any;
   paths: PathType[];
   redoStack: PathType[];
@@ -27,6 +28,7 @@ export type StoreType = {
   currentKey: string;
 
   setColor: (color: string) => void;
+  setRecentColors: (colors: string[]) => void;
   setStrokeWidth: (strokeWidth: number) => void;
   setStrokeStyle: (strokeStyle: 'stroke' | 'fill') => void;
   setFileName: (fileName: string) => void;
