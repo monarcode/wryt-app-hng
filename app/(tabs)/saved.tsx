@@ -1,14 +1,6 @@
 import Entypo from '@expo/vector-icons/Entypo';
-<<<<<<< HEAD
-import Entypo from '@expo/vector-icons/Entypo';
 import * as PopoverPrimitive from '@rn-primitives/popover';
 import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
-=======
-import * as PopoverPrimitive from '@rn-primitives/popover';
-import { useEffect, useRef, useState } from 'react';
-<<<<<<< HEAD
->>>>>>> 81ebdec (empty state for saved sketch)
 import {
   Pressable,
   StyleSheet,
@@ -17,31 +9,12 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from 'react-native';
-<<<<<<< HEAD
-import { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import SortIcon from '~/assets/icons/sort-icon.svg';
-import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
-import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
-import { Text, View } from '~/components/shared';
-import EmptyState from '~/components/shared/emptyState';
-import EmptyState from '~/components/shared/emptyState';
-=======
-=======
-import { StyleSheet, Image, FlatList, ImageBackground, TouchableOpacity } from 'react-native';
->>>>>>> 99534b6 (Refactor: Modified the SaveSketch card)
-import Animated, { FadeInDown, FadeOutDown } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
 import SortIcon from '~/assets/icons/sort-icon.svg';
 import DeleteSketchModal from '~/components/modals/DeleteSketchModal';
 import { Text, View } from '~/components/shared';
 import EmptyState from '~/components/shared/emptyState';
->>>>>>> 81ebdec (empty state for saved sketch)
 import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 import timeAgo from '~/utils/timeAgo';
@@ -54,10 +27,6 @@ interface Sketch {
 
 const SavedSketches = () => {
   const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
-<<<<<<< HEAD
-  const triggerRef = useRef<PopoverPrimitive.PopoverTriggerRef>(null);
-=======
->>>>>>> 81ebdec (empty state for saved sketch)
   const [sketches, setSketches] = useState<Sketch[]>([]);
   const getAllSavedDrawings = useSketchPadStore((state) => state.getAllSavedDrawings);
   const refreshTrigger = useSketchPadStore((state) => state.refreshTrigger);
@@ -74,45 +43,27 @@ const SavedSketches = () => {
     loadSavedSketches();
   }, [refreshTrigger, isSorted]);
 
-  const renderSketch = ({ item }: { item: Sketch }) => {
+ const renderSketch = ({ item }: { item: Sketch }) => {
     const onDeleteSketch = async () => {
       await deleteDrawing(item.timeStamp);
       loadSavedSketches();
       if (triggerRef.current) triggerRef.current.close();
     };
-<<<<<<< HEAD
+
       if (triggerRef.current) {
         triggerRef.current.close();
       }
-=======
       if (triggerRef.current) triggerRef.current.close();
->>>>>>> 99534b61b35e7d126f5e893e680cda9a6a6fc298
-    };
-
-    const handleEditSketch = () => {
-      if (triggerRef.current) triggerRef.current.close();
-      if (triggerRef.current) triggerRef.current.close();
-=======
-
-    const handleEditSketch = () => {
-      if (triggerRef.current) triggerRef.current.close();
->>>>>>> 81ebdec (empty state for saved sketch)
     };
 
     return (
       <>
-<<<<<<< HEAD
         <ImageBackground
           resizeMode="contain"
           source={{ uri: `data:image/png;base64,${item.imageUri}` }}
           style={styles.sketchContainer}>
-<<<<<<< HEAD
+
         <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
-=======
->>>>>>> 81ebdec (empty state for saved sketch)
-=======
-        <TouchableOpacity activeOpacity={0.8} style={styles.sketchContainer}>
->>>>>>> 99534b6 (Refactor: Modified the SaveSketch card)
           <View style={styles.cardHead}>
             <View />
             <PopoverPrimitive.Root>
@@ -180,21 +131,6 @@ const SavedSketches = () => {
       </>
     );
   };
-<<<<<<< HEAD
-  };
-
-  const sortedSketches = () => {
-    if (isSorted) {
-      return sketches.sort((a: any, b: any) => a.fileName.localeCompare(b.fileName));
-    }
-    return sketches;
-  };
-
-  const toggleSort = () => {
-    setIsSorted(!isSorted);
-  };
-=======
->>>>>>> 81ebdec (empty state for saved sketch)
 
   const sortedSketches = () => {
     if (isSorted) {
@@ -242,34 +178,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: theme.fontFamily.semiBold,
   },
-<<<<<<< HEAD
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontFamily: theme.fontFamily.semiBold,
-  },
-  container: {
-    flex: 1,
-  },
-<<<<<<< HEAD
-=======
-  title: {
-    fontSize: 24,
-    fontFamily: theme.fontFamily.semiBold,
-  },
->>>>>>> 99534b61b35e7d126f5e893e680cda9a6a6fc298
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
     marginTop: 20,
-<<<<<<< HEAD
-    marginTop: 20,
-=======
->>>>>>> 81ebdec (empty state for saved sketch)
   },
   sort: {
     backgroundColor: '#fff',
