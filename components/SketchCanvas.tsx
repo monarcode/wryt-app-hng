@@ -34,7 +34,7 @@ export const SketchCanvas: React.FC<SketchCanvasProps> = ({
   const pointsRef = useRef<Point[]>([]);
   const canvasRef = useCanvasRef();
 
-  const { undo, redo, paths: storePaths, addPath, clear } = useSketchPadStore();
+  const { paths: storePaths, addPath } = useSketchPadStore();
 
   // Sync local paths with store paths
   useEffect(() => {
