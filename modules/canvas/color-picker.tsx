@@ -2,6 +2,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import ColorPickerIcon from '~/assets/icons/color-picker.svg';
 import { View } from '~/components/shared';
+import useSketchPadStore from '~/store/store';
 import { theme } from '~/theme';
 
 interface ColorPickerProps {
@@ -9,10 +10,12 @@ interface ColorPickerProps {
 }
 
 const ColorPicker = ({ onPress }: ColorPickerProps) => {
+  const { color } = useSketchPadStore((store) => store);
+
   return (
     <View style={styles.container}>
       <View style={styles.colorWrapper}>
-        <View style={[styles.activeColor]} />
+        <View style={[styles.activeColor, { backgroundColor: color }]} />
       </View>
 
       <TouchableOpacity activeOpacity={0.6} onPress={onPress} style={styles.action}>
@@ -50,7 +53,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 50,
-    backgroundColor: '#000',
   },
 });
 

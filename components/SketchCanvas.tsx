@@ -23,18 +23,13 @@ interface SketchCanvasProps {
   onSaveSnapshot: (uri: string) => void;
 }
 
-export const SketchCanvas: React.FC<SketchCanvasProps> = ({
-  containerStyle,
-  color = 'black',
-  strokeWidth = 4,
-  onSaveSnapshot,
-}) => {
+export const SketchCanvas: React.FC<SketchCanvasProps> = ({ containerStyle, onSaveSnapshot }) => {
   const [paths, setPaths] = useState<SkPath[]>([]);
   const currentPath = useRef<SkPath | null>(null);
   const pointsRef = useRef<Point[]>([]);
   const canvasRef = useCanvasRef();
 
-  const { paths: storePaths, addPath } = useSketchPadStore();
+  const { paths: storePaths, addPath, color, strokeWidth } = useSketchPadStore();
 
   // Sync local paths with store paths
   useEffect(() => {

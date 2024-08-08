@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import ColorPicker, { Panel1, returnedResults } from 'reanimated-color-picker';
+
 import { Button, Text } from '~/components/shared';
 import RecentColor from '~/components/shared/RecentColor';
-import { theme } from '~/theme';
 import useSketchPadStore from '~/store/store';
+import { theme } from '~/theme';
 
 const BottomSheetContent: React.FC<{ onPress: () => void }> = ({ onPress }) => {
   const { color, setColor, recentColors, setRecentColors } = useSketchPadStore();
@@ -12,7 +13,10 @@ const BottomSheetContent: React.FC<{ onPress: () => void }> = ({ onPress }) => {
   const handleColorSelect = (colors: returnedResults) => {
     const selectedColor = colors.hex;
     setColor(selectedColor);
-    const updatedRecentColors = [selectedColor, ...recentColors.filter(c => c !== selectedColor)].slice(0, 3);
+    const updatedRecentColors = [
+      selectedColor,
+      ...recentColors.filter((c) => c !== selectedColor),
+    ].slice(0, 3);
     setRecentColors(updatedRecentColors);
   };
 
@@ -25,8 +29,7 @@ const BottomSheetContent: React.FC<{ onPress: () => void }> = ({ onPress }) => {
 
       <View style={styles.colorContainer}>
         <ColorPicker value={color} onChange={handleColorSelect}>
-          <Panel1 style={{ width: '100%', height: 110 }}/>
-          
+          <Panel1 style={{ width: '100%', height: 110 }} />
         </ColorPicker>
       </View>
 
