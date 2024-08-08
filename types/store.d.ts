@@ -34,6 +34,7 @@ export type StoreType = {
   startPath: (x: number, y: number) => void;
   addToPath: (x: number, y: number) => void;
   endPath: () => void;
+  addPath: (x: PathType) => void;
 
   undo: () => void;
   redo: () => void;
