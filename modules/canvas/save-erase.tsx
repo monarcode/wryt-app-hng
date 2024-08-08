@@ -7,15 +7,16 @@ import { theme } from '~/theme';
 
 interface Props {
   handleSave: (open: boolean) => void;
+  handleErase: (open: boolean) => void;
 }
 
-const SaveErase = ({ handleSave }: Props) => {
+const SaveErase = ({ handleSave, handleErase }: Props) => {
   return (
     <View style={styles.container}>
       <Pressable style={styles.action} onPress={() => handleSave(true)}>
         <SaveIcon />
       </Pressable>
-      <Pressable style={styles.action}>
+      <Pressable onPress={() => handleErase(true)} style={styles.action}>
         <EraserIcon />
       </Pressable>
     </View>
