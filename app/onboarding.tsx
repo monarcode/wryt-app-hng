@@ -38,13 +38,13 @@ const slides: SlideItem[] = [
   {
     id: '1',
     title: 'Easy to use',
-    desc: 'Lorem ipsum dolor sit amet consectetur. Mauris ut morbi adipiscing semper pretium sollicitudin.',
+    desc: 'Sketch your ideas in seconds, no artistic skills required',
     image: <SlideOne />,
   },
   {
     id: '2',
     title: 'Take it with you',
-    desc: 'Lorem ipsum dolor sit amet consectetur. Mauris ut morbi adipiscing semper pretium sollicitudin.',
+    desc: 'Save and access your sketches anywhere, anytime',
     image: <SlideTwo />,
   },
   {
