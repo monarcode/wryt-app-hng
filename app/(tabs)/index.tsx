@@ -1,12 +1,11 @@
-import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet';
-import { useState, useRef, useMemo } from 'react';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SketchCanvas } from '~/components/SketchCanvas';
 import ClearSketchModal from '~/components/modals/ClearSketchModal';
 import SaveSketchModal from '~/components/modals/SaveSketchModal';
-import { Text } from '~/components/shared';
 import BottomSheetContent from '~/modules/bottom-sheet/Bottom-sheet-content';
 import CustomBackdrop from '~/modules/bottom-sheet/custom-backdrop';
 import ColorPicker from '~/modules/canvas/color-picker';
@@ -34,7 +33,7 @@ export default function Home() {
   };
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ['50%'], []);
+  const snapPoints = useMemo(() => ['55%'], []);
 
   const handleOpenPalette = () => {
     bottomSheetRef.current?.present();
@@ -60,31 +59,29 @@ export default function Home() {
         <ClearSketchModal isOpen={isEraseModalOpen} onOpenChange={handleEraseModalOpenChange} />
 
         {/* Color Palette Bottom Sheet */}
-        <BottomSheetModalProvider>
-          <BottomSheetModal
-            ref={bottomSheetRef}
-            index={0}
-            snapPoints={snapPoints}
-            handleStyle={{
-              backgroundColor: theme.colors.light,
-              paddingTop: 16,
-              borderTopLeftRadius: 40,
-              borderTopRightRadius: 40,
-            }}
-            backdropComponent={({ animatedIndex, style, animatedPosition }) => (
-              <CustomBackdrop
-                style={style}
-                animatedIndex={animatedIndex}
-                animatedPosition={animatedPosition}
-                close={SaveSelectedColor}
-              />
-            )}
-            enablePanDownToClose>
-            <BottomSheetView style={styles.sheetContentContainer}>
-              <BottomSheetContent onPress={SaveSelectedColor} />
-            </BottomSheetView>
-          </BottomSheetModal>
-        </BottomSheetModalProvider>
+        <BottomSheetModal
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={snapPoints}
+          handleStyle={{
+            backgroundColor: '#fff',
+            paddingTop: 16,
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+          }}
+          backdropComponent={({ animatedIndex, style, animatedPosition }) => (
+            <CustomBackdrop
+              style={style}
+              animatedIndex={animatedIndex}
+              animatedPosition={animatedPosition}
+              close={SaveSelectedColor}
+            />
+          )}
+          enablePanDownToClose>
+          <BottomSheetView style={styles.sheetContentContainer}>
+            <BottomSheetContent onPress={SaveSelectedColor} />
+          </BottomSheetView>
+        </BottomSheetModal>
       </SafeAreaView>
     </>
   );
@@ -102,9 +99,9 @@ const styles = StyleSheet.create({
 
   sheetContentContainer: {
     flex: 1,
-    backgroundColor: theme.colors.light,
+    backgroundColor: '#fff',
     paddingHorizontal: 16,
-    paddingBottom: 14,
+    paddingBottom: 30,
     paddingTop: 8,
   },
 });

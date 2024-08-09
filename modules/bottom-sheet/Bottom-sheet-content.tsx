@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import ColorPicker, { Panel1, returnedResults } from 'reanimated-color-picker';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import ColorPicker, { Panel4, returnedResults } from 'reanimated-color-picker';
 
 import { Button, Text } from '~/components/shared';
 import RecentColor from '~/components/shared/RecentColor';
@@ -22,14 +22,14 @@ const BottomSheetContent: React.FC<{ onPress: () => void }> = ({ onPress }) => {
 
   return (
     <View style={styles.sheetContentContainer}>
-      <View style={{ alignItems: 'center', gap: 8, marginBottom: 8 }}>
+      <View style={{ alignItems: 'center', gap: 2 }}>
         <Text style={styles.title}>Pick A Color</Text>
         <Text style={styles.subtitle}>Select color to draw on your canvas</Text>
       </View>
 
       <View style={styles.colorContainer}>
-        <ColorPicker value={color} onChange={handleColorSelect}>
-          <Panel1 style={{ width: '100%', height: 110 }} />
+        <ColorPicker value={color} onComplete={handleColorSelect}>
+          <Panel4 style={{ width: '100%', height: 180 }} />
         </ColorPicker>
       </View>
 
@@ -50,8 +50,7 @@ const BottomSheetContent: React.FC<{ onPress: () => void }> = ({ onPress }) => {
 const styles = StyleSheet.create({
   sheetContentContainer: {
     flex: 1,
-    flexDirection: 'column',
-    rowGap: 8,
+    rowGap: 16,
   },
   title: {
     fontSize: theme.fontSizes.xxl,
@@ -64,10 +63,10 @@ const styles = StyleSheet.create({
     color: theme.colors.neutral[200],
   },
   colorContainer: {
-    flex: 1,
     width: '100%',
-    backgroundColor: theme.colors.gray,
-    borderRadius: 24,
+    minHeight: 180,
+    backgroundColor: theme.colors.light,
+    borderRadius: 16,
     padding: 10,
   },
   recentlyUsedText: {
