@@ -6,10 +6,12 @@ import {
   useFonts,
 } from '@expo-google-fonts/quicksand';
 import { PortalHost } from '@rn-primitives/portal';
-import { Stack } from 'expo-router';
+import { router, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import useOnboardingStore from '~/store/onboarding-store';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,10 +38,23 @@ export default function RootLayout() {
     return null;
   }
 
+  return <Root />;
+}
+
+function Root() {
+  const onboardingStore = useOnboardingStore();
+
+  useEffect(() => {
+    if (!onboardingStore.isOnboardingCompleted) {
+      router.replace('/onboarding');
+    }
+  }, [onboardingStore.isOnboardingCompleted]);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
       <PortalHost />
