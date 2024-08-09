@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 
@@ -9,12 +10,14 @@ const CustomBottomTabs = (props: BottomTabBarProps) => {
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: 'black',
-        headerShown: false,
-      }}
-      tabBar={CustomBottomTabs}
-    />
+    <BottomSheetModalProvider>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: 'black',
+          headerShown: false,
+        }}
+        tabBar={CustomBottomTabs}
+      />
+    </BottomSheetModalProvider>
   );
 }
